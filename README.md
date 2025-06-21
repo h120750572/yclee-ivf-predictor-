@@ -82,13 +82,6 @@
 </html>
 """
 
-# 儲存為 HTML 檔案
-html_path = Path("/mnt/data/ivf_predictor_static.html")
-html_path.write_text(static_html, encoding="utf-8")
-
-html_path.name
-Result
-'ivf_predictor_static.html'
 
 預測變數與其對成功率影響
 1. AMH 對活產率的預測效度
