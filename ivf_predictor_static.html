@@ -1,0 +1,22 @@
+<style>body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #0066cc; }
+        label, select, input { margin-top: 10px; display: block; }
+        .result { margin-top: 20px; padding: 10px; background: #f0f8ff; border: 1px solid #ccc; }</style>
+<h1>試管嬰兒成功率預測工具（靜態版）</h1>
+<label for="age">年齡層：</label>
+<select id="age">
+  <option value="<35">小於35歲</option>
+  <option value="35-39">35-39歲</option>
+  <option value="≥40">大於等於40歲</option>
+</select>
+<label for="type">胚胎類型：</label>
+<select id="type">
+  <option value="fresh">新鮮胚胎</option>
+  <option value="frozen">冷凍胚胎</option>
+</select>
+<label for="amh">AMH (ng/mL)：</label> 
+<input id="amh" step="0.1" type="number"> 
+<label for="bmi">BMI：</label> 
+<input id="bmi" step="0.1" type="number"> 
+<button>預測</button>
+<div id="output" class="result">&nbsp;</div>
