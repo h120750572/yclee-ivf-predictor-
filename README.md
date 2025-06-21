@@ -97,6 +97,103 @@ IVF 兒童在早產與先天缺陷風險上略高於自然懷孕。
 項目	說明
 GitHub 帳號	若沒有帳號，請前往 https://github.com 註冊
 ivf_predictor_static.html 檔案	即您已產出的靜態網頁（您自己用python生成）
+python 程式碼（匯出 HTML+JS 靜態版（可單機用））：
+from pathlib import Path
+
+# 建立純 HTML + JavaScript 靜態版（不含 Flask）
+static_html = """
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>試管嬰兒成功率預測工具</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #0066cc; }
+        label, select, input { margin-top: 10px; display: block; }
+        .result { margin-top: 20px; padding: 10px; background: #f0f8ff; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>試管嬰兒成功率預測工具（靜態版）</h1>
+
+    <label for="age">年齡層：</label>
+    <select id="age">
+        <option value="<35">小於35歲</option>
+        <option value="35-39">35-39歲</option>
+        <option value="≥40">大於等於40歲</option>
+    </select>
+
+    <label for="type">胚胎類型：</label>
+    <select id="type">
+        <option value="fresh">新鮮胚胎</option>
+        <option value="frozen">冷凍胚胎</option>
+    </select>
+
+    <label for="amh">AMH (ng/mL)：</label>
+    <input type="number" step="0.1" id="amh" />
+
+    <label for="bmi">BMI：</label>
+    <input type="number" step="0.1" id="bmi" />
+
+    <button onclick="predict()">預測</button>
+
+    <div id="output" class="result"></div>
+
+    <script>
+        const stats = {
+            '<35': {
+                fresh: {pregnancy: 38.6, live_birth: 29.1},
+                frozen: {pregnancy: 56.3, live_birth: 45.5},
+                miscarriage: 15
+            },
+            '35-39': {
+                fresh: {pregnancy: 27.0, live_birth: 18.1},
+                frozen: {pregnancy: 46.4, live_birth: 34.8},
+                miscarriage: 22
+            },
+            '≥40': {
+                fresh: {pregnancy: 13.5, live_birth: 6.0},
+                frozen: {pregnancy: 27.7, live_birth: 15.6},
+                miscarriage: 30
+            }
+        };
+
+        function predict() {
+            const age = document.getElementById('age').value;
+            const type = document.getElementById('type').value;
+            const amh = parseFloat(document.getElementById('amh').value);
+            const bmi = parseFloat(document.getElementById('bmi').value);
+
+            let result = stats[age][type];
+            let live_birth = result.live_birth;
+
+            if (!isNaN(amh) && amh > 3.5) live_birth += 3;
+            if (!isNaN(bmi) && (bmi < 18.5 || bmi > 30)) live_birth -= 3;
+
+            const output = `
+                <strong>懷孕率：</strong> ${result.pregnancy.toFixed(1)}%<br>
+                <strong>活產率：</strong> ${live_birth.toFixed(1)}%<br>
+                <strong>自然流產率：</strong> 約 ${stats[age].miscarriage}%<br>
+                <strong>預估活產胎數：</strong> 單胎(85%) / 雙胎(15%)<br>
+                <strong>性別比率：</strong> 男 53.1% / 女 46.9%<br>
+                <strong>先天缺陷機率：</strong> 約 1.0%
+            `;
+            document.getElementById('output').innerHTML = output;
+        }
+    </script>
+</body>
+</html>
+"""
+
+# 儲存為 HTML 檔案
+html_path = Path("/mnt/data/ivf_predictor_static.html")
+html_path.write_text(static_html, encoding="utf-8")
+
+html_path.name
+Result
+'ivf_predictor_static.html'
+
 基礎 Git 操作能力	可用 GitHub 網頁版或 GitHub Desktop 操作
 
 🧱 步驟 1：建立 GitHub Repository
